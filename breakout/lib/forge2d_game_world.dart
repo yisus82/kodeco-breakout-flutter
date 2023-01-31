@@ -20,6 +20,11 @@ enum GameState {
 
 class Forge2dGameWorld extends Forge2DGame with HasDraggables, HasTappables {
   late final Ball _ball;
+  late final Arena _arena;
+  late final Paddle _paddle;
+  late final DeadZone _deadZone;
+  late final BrickWall _brickWall;
+
   GameState gameState = GameState.initializing;
 
   Forge2dGameWorld() : super(gravity: Vector2.zero(), zoom: 20);
@@ -30,39 +35,39 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables, HasTappables {
   }
 
   Future<void> _initializeGame() async {
-    final arena = Arena();
-    await add(arena);
+    _arena = Arena();
+    await add(_arena);
 
     final brickWallPosition = Vector2(0.0, size.y * 0.075);
-    final brickWall = BrickWall(
+    _brickWall = BrickWall(
       position: brickWallPosition,
       rows: 8,
       columns: 6,
     );
-    await add(brickWall);
+    await add(_brickWall);
 
     final deadZoneSize = Size(size.x, size.y * 0.1);
     final deadZonePosition = Vector2(
       size.x / 2.0,
       size.y - (size.y * 0.1) / 2.0,
     );
-    final deadZone = DeadZone(
+    _deadZone = DeadZone(
       size: deadZoneSize,
       position: deadZonePosition,
     );
-    await add(deadZone);
+    await add(_deadZone);
 
     const paddleSize = Size(4.0, 0.8);
     final paddlePosition = Vector2(
       size.x / 2.0,
       size.y - deadZoneSize.height - paddleSize.height / 2.0,
     );
-    final paddle = Paddle(
+    _paddle = Paddle(
       size: paddleSize,
-      ground: arena,
+      ground: _arena,
       position: paddlePosition,
     );
-    await add(paddle);
+    await add(_paddle);
 
     final ballPosition = Vector2(size.x / 2.0, size.y / 2.0 + 10.0);
     _ball = Ball(
@@ -80,6 +85,7 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables, HasTappables {
     super.update(dt);
     if (gameState == GameState.lost || gameState == GameState.won) {
       pauseEngine();
+      overlays.add('PostGame');
     }
   }
 
@@ -93,5 +99,14 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables, HasTappables {
     super.onTapDown(pointerId, info);
   }
 
-  Future<void> resetGame() async {}
+  Future<void> resetGame() async {
+    gameState = GameState.initializing;
+    _ball.reset();
+    _paddle.reset();
+    await _brickWall.reset();
+    gameState = GameState.ready;
+    overlays.remove(overlays.activeOverlays.first);
+    overlays.add('PreGame');
+    resumeEngine();
+  }
 }

@@ -78,4 +78,9 @@ class BrickWall extends Component with HasGameRef<Forge2dGameWorld> {
     }
     super.update(dt);
   }
+
+  Future<void> reset() async {
+    removeAll(children);
+    await _buildWall();
+  }
 }

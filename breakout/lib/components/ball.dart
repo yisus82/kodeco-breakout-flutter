@@ -24,4 +24,10 @@ class Ball extends BodyComponent<Forge2dGameWorld> {
 
     return ball;
   }
+
+  void reset() {
+    body.setTransform(position, angle);
+    body.angularVelocity = 0.0;
+    body.linearVelocity = Vector2.zero();
+  }
 }
