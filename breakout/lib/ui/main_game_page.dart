@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flame/game.dart';
+import '../forge2d_game_world.dart';
+
 
 class MainGamePage extends StatefulWidget {
   const MainGamePage({super.key});
@@ -9,7 +12,7 @@ class MainGamePage extends StatefulWidget {
 
 class MainGameState extends State<MainGamePage> {
   final rwGreen = const Color.fromARGB(255, 21, 132, 67);
-  // TODO: Create instance of Forge2dGameWorld here
+  final forge2dGameWorld = Forge2dGameWorld();
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +24,8 @@ class MainGameState extends State<MainGamePage> {
           horizontal: 30,
           vertical: 40,
         ),
-        // TODO: Replace Center widget with GameWidget
-        child: const Center(
-          child: Text(
-            'Flame Game World Goes Here!',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-            ),
-          ),
+        child: GameWidget(
+          game: forge2dGameWorld,
         ),
       ),
     );
