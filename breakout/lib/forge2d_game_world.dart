@@ -2,9 +2,10 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 
-import 'components/ball.dart';
 import 'components/arena.dart';
+import 'components/ball.dart';
 import 'components/brick_wall.dart';
+import 'components/dead_zone.dart';
 import 'components/paddle.dart';
 
 enum GameState {
@@ -40,10 +41,21 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
     );
     await add(brickWall);
 
+    final deadZoneSize = Size(size.x, size.y * 0.1);
+    final deadZonePosition = Vector2(
+      size.x / 2.0,
+      size.y - (size.y * 0.1) / 2.0,
+    );
+    final deadZone = DeadZone(
+      size: deadZoneSize,
+      position: deadZonePosition,
+    );
+    await add(deadZone);
+
     const paddleSize = Size(4.0, 0.8);
     final paddlePosition = Vector2(
       size.x / 2.0,
-      size.y * 0.85,
+      size.y - deadZoneSize.height - paddleSize.height / 2.0,
     );
     final paddle = Paddle(
       size: paddleSize,
@@ -59,5 +71,13 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
     await add(_ball);
 
     gameState = GameState.ready;
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (gameState == GameState.lost) {
+      pauseEngine();
+    }
   }
 }
