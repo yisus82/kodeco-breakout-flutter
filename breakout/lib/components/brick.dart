@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+
 import '../forge2d_game_world.dart';
 
 class Brick extends BodyComponent<Forge2dGameWorld> {

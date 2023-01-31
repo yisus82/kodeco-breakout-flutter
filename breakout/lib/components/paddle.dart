@@ -1,8 +1,11 @@
+import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
+import 'package:flame/input.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+
 import '../forge2d_game_world.dart';
 
-class Paddle extends BodyComponent<Forge2dGameWorld> {
+class Paddle extends BodyComponent<Forge2dGameWorld> with Draggable {
   final Size size;
   final Vector2 position;
 
@@ -34,5 +37,13 @@ class Paddle extends BodyComponent<Forge2dGameWorld> {
       ..restitution = 1.0);
 
     return paddleBody;
+  }
+
+  @override
+  bool onDragUpdate(DragUpdateInfo info) {
+    body.setTransform(info.eventPosition.game, 0.0);
+
+    // Don't continue passing the event
+    return false;
   }
 }

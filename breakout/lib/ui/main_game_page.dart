@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
-import '../forge2d_game_world.dart';
 
+import '../forge2d_game_world.dart';
 
 class MainGamePage extends StatefulWidget {
   const MainGamePage({super.key});

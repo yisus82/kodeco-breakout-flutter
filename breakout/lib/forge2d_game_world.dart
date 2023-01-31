@@ -1,13 +1,13 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame/extensions.dart';
+import 'package:flame/game.dart';
 
 import 'components/ball.dart';
 import 'components/arena.dart';
 import 'components/brick_wall.dart';
 import 'components/paddle.dart';
 
-
-class Forge2dGameWorld extends Forge2DGame {
+class Forge2dGameWorld extends Forge2DGame with HasDraggables {
   late final Ball _ball;
 
   Forge2dGameWorld() : super(gravity: Vector2.zero(), zoom: 20);
