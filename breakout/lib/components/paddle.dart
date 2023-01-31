@@ -46,6 +46,21 @@ class Paddle extends BodyComponent<Forge2dGameWorld> with Draggable {
   }
 
   @override
+  void onMount() {
+    super.onMount();
+    final worldAxis = Vector2(1.0, 0.0);
+    final travelExtent = (gameRef.size.x / 2) - (size.width / 2.0);
+    final jointDef = PrismaticJointDef()
+      ..enableLimit = true
+      ..lowerTranslation = -travelExtent
+      ..upperTranslation = travelExtent
+      ..collideConnected = true;
+    jointDef.initialize(body, ground.body, body.worldCenter, worldAxis);
+    final joint = PrismaticJoint(jointDef);
+    world.createJoint(joint);
+  }
+
+  @override
   bool onDragStart(DragStartInfo info) {
     if (_mouseJoint != null) {
       return true;
