@@ -1,6 +1,8 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 
 import 'components/ball.dart';
+import 'components/arena.dart';
+
 
 class Forge2dGameWorld extends Forge2DGame {
   @override
@@ -9,6 +11,9 @@ class Forge2dGameWorld extends Forge2DGame {
   }
 
   Future<void> _initializeGame() async {
+    final arena = Arena();
+    await add(arena);
+
     final ball = Ball(
       radius: 1.0,
       position: size / 2,
