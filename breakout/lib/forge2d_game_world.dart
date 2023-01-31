@@ -2,7 +2,7 @@ import 'package:flame_forge2d/flame_forge2d.dart';
 
 import 'components/ball.dart';
 import 'components/arena.dart';
-
+import 'components/brick_wall.dart';
 
 class Forge2dGameWorld extends Forge2DGame {
   late final Ball _ball;
@@ -18,6 +18,14 @@ class Forge2dGameWorld extends Forge2DGame {
   Future<void> _initializeGame() async {
     final arena = Arena();
     await add(arena);
+
+    final brickWallPosition = Vector2(0.0, size.y * 0.075);
+    final brickWall = BrickWall(
+      position: brickWallPosition,
+      rows: 8,
+      columns: 6,
+    );
+    await add(brickWall);
 
     _ball = Ball(
       radius: 0.5,
