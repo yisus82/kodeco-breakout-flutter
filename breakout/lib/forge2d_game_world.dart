@@ -1,8 +1,11 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flame/extensions.dart';
 
 import 'components/ball.dart';
 import 'components/arena.dart';
 import 'components/brick_wall.dart';
+import 'components/paddle.dart';
+
 
 class Forge2dGameWorld extends Forge2DGame {
   late final Ball _ball;
@@ -26,6 +29,17 @@ class Forge2dGameWorld extends Forge2DGame {
       columns: 6,
     );
     await add(brickWall);
+
+    const paddleSize = Size(4.0, 0.8);
+    final paddlePosition = Vector2(
+      size.x / 2.0,
+      size.y * 0.85,
+    );
+    final paddle = Paddle(
+      size: paddleSize,
+      position: paddlePosition,
+    );
+    await add(paddle);
 
     _ball = Ball(
       radius: 0.5,
