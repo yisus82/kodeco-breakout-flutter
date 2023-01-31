@@ -1,6 +1,7 @@
 import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 
 import 'components/arena.dart';
 import 'components/ball.dart';
@@ -17,7 +18,7 @@ enum GameState {
   lost,
 }
 
-class Forge2dGameWorld extends Forge2DGame with HasDraggables {
+class Forge2dGameWorld extends Forge2DGame with HasDraggables, HasTappables {
   late final Ball _ball;
   GameState gameState = GameState.initializing;
 
@@ -26,7 +27,6 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
   @override
   Future<void> onLoad() async {
     await _initializeGame();
-    _ball.body.applyLinearImpulse(Vector2(-10, -10));
   }
 
   Future<void> _initializeGame() async {
@@ -64,9 +64,10 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
     );
     await add(paddle);
 
+    final ballPosition = Vector2(size.x / 2.0, size.y / 2.0 + 10.0);
     _ball = Ball(
       radius: 0.5,
-      position: size / 2,
+      position: ballPosition,
     );
     await add(_ball);
 
@@ -80,5 +81,15 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
     if (gameState == GameState.lost || gameState == GameState.won) {
       pauseEngine();
     }
+  }
+
+  @override
+  void onTapDown(int pointerId, TapDownInfo info) {
+    if (gameState == GameState.ready) {
+      overlays.remove('PreGame');
+      _ball.body.applyLinearImpulse(Vector2(-10.0, -10.0));
+      gameState = GameState.running;
+    }
+    super.onTapDown(pointerId, info);
   }
 }
