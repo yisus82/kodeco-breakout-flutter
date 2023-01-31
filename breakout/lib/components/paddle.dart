@@ -7,10 +7,16 @@ import '../forge2d_game_world.dart';
 
 class Paddle extends BodyComponent<Forge2dGameWorld> with Draggable {
   final Size size;
+  final BodyComponent ground;
   final Vector2 position;
+
+  MouseJoint? _mouseJoint;
+  Vector2 dragStartPosition = Vector2.zero();
+  Vector2 dragAccumulativePosition = Vector2.zero();
 
   Paddle({
     required this.size,
+    required this.ground,
     required this.position,
   });
 
@@ -40,10 +46,62 @@ class Paddle extends BodyComponent<Forge2dGameWorld> with Draggable {
   }
 
   @override
-  bool onDragUpdate(DragUpdateInfo info) {
-    body.setTransform(info.eventPosition.game, 0.0);
+  bool onDragStart(DragStartInfo info) {
+    if (_mouseJoint != null) {
+      return true;
+    }
+    dragStartPosition = info.eventPosition.game;
+    _setupDragControls();
 
-    // Don't continue passing the event
+    // Don't continue passing the event.
     return false;
+  }
+
+  @override
+  bool onDragUpdate(DragUpdateInfo info) {
+    dragAccumulativePosition += info.delta.game;
+    if ((dragAccumulativePosition - dragStartPosition).length > 0.1) {
+      _mouseJoint?.setTarget(dragAccumulativePosition);
+      dragStartPosition = dragAccumulativePosition;
+    }
+
+    // Don't continue passing the event.
+    return false;
+  }
+
+  @override
+  bool onDragEnd(DragEndInfo info) {
+    _resetDragControls();
+
+    // Don't continue passing the event.
+    return false;
+  }
+
+  @override
+  bool onDragCancel() {
+    _resetDragControls();
+
+    // Don't continue passing the event.
+    return false;
+  }
+
+  void _setupDragControls() {
+    final mouseJointDef = MouseJointDef()
+      ..bodyA = ground.body
+      ..bodyB = body
+      ..frequencyHz = 5.0
+      ..dampingRatio = 0.9
+      ..collideConnected = false
+      ..maxForce = 2000.0 * body.mass;
+    _mouseJoint = MouseJoint(mouseJointDef);
+    world.createJoint(_mouseJoint!);
+  }
+
+  void _resetDragControls() {
+    dragAccumulativePosition = Vector2.zero();
+    if (_mouseJoint != null) {
+      world.destroyJoint(_mouseJoint!);
+      _mouseJoint = null;
+    }
   }
 }
