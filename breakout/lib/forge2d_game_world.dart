@@ -7,8 +7,18 @@ import 'components/arena.dart';
 import 'components/brick_wall.dart';
 import 'components/paddle.dart';
 
+enum GameState {
+  initializing,
+  ready,
+  running,
+  paused,
+  won,
+  lost,
+}
+
 class Forge2dGameWorld extends Forge2DGame with HasDraggables {
   late final Ball _ball;
+  GameState gameState = GameState.initializing;
 
   Forge2dGameWorld() : super(gravity: Vector2.zero(), zoom: 20);
 
@@ -47,5 +57,7 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
       position: size / 2,
     );
     await add(_ball);
+
+    gameState = GameState.ready;
   }
 }
