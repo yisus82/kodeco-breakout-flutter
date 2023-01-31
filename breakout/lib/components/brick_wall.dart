@@ -22,11 +22,6 @@ class BrickWall extends Component with HasGameRef<Forge2dGameWorld> {
         columns = columns ?? 1,
         gap = gap ?? 0.1;
 
-  @override
-  Future<void> onLoad() async {
-    await _buildWall();
-  }
-
   Future<void> _buildWall() async {
     final wallSize = size ??
         Size(
@@ -57,5 +52,27 @@ class BrickWall extends Component with HasGameRef<Forge2dGameWorld> {
         brickSize.height + gap,
       );
     }
+  }
+
+  @override
+  Future<void> onLoad() async {
+    await _buildWall();
+  }
+
+  @override
+  void update(double dt) {
+    // Check for bricks in the wall that have been flagged for removal.
+    // This is a destructive process so we have to iterate over a copy of
+    // the elements and not the actual list of children and fixtures.
+    for (final child in [...children]) {
+      if (child is Brick && child.destroy) {
+        for (final fixture in [...child.body.fixtures]) {
+          child.body.destroyFixture(fixture);
+        }
+        gameRef.world.destroyBody(child.body);
+        remove(child);
+      }
+    }
+    super.update(dt);
   }
 }
