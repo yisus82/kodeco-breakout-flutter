@@ -15,8 +15,12 @@ class Ball extends BodyComponent<Forge2dGameWorld> {
       ..position = position;
     final ball = world.createBody(bodyDef);
     final shape = CircleShape()..radius = radius;
-    final fixtureDef = FixtureDef(shape);
+
+    final fixtureDef = FixtureDef(shape)
+      ..restitution = 1.0
+      ..density = 1.0;
     ball.createFixture(fixtureDef);
+
     return ball;
   }
 }

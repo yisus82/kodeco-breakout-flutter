@@ -29,10 +29,15 @@ class Arena extends BodyComponent<Forge2dGameWorld> {
       Vector2(0, 0),
       Vector2(arenaSize.x, 0),
     ];
-    final chain = ChainShape()..createLoop(vertices);
 
+    final chain = ChainShape()..createLoop(vertices);
     for (var index = 0; index < chain.childCount; index++) {
-      arenaBody.createFixture(FixtureDef(chain.childEdge(index)));
+      arenaBody.createFixture(
+        FixtureDef(chain.childEdge(index))
+          ..density = 2000.0
+          ..friction = 0.0
+          ..restitution = 0.4,
+      );
     }
 
     return arenaBody;
