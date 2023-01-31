@@ -71,6 +71,7 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
     await add(_ball);
 
     gameState = GameState.ready;
+    overlays.add('PreGame');
   }
 
   @override
