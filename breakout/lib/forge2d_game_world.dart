@@ -92,4 +92,6 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables, HasTappables {
     }
     super.onTapDown(pointerId, info);
   }
+
+  Future<void> resetGame() async {}
 }
