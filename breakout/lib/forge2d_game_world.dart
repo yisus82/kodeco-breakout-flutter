@@ -76,7 +76,7 @@ class Forge2dGameWorld extends Forge2DGame with HasDraggables {
   @override
   void update(double dt) {
     super.update(dt);
-    if (gameState == GameState.lost) {
+    if (gameState == GameState.lost || gameState == GameState.won) {
       pauseEngine();
     }
   }
