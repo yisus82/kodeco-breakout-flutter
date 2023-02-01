@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/input.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/rendering.dart';
 
 import '../forge2d_game_world.dart';
 
@@ -43,6 +44,24 @@ class Paddle extends BodyComponent<Forge2dGameWorld> with Draggable {
       ..restitution = 1.0);
 
     return paddleBody;
+  }
+
+  @override
+  void render(Canvas canvas) {
+    final shape = body.fixtures.first.shape as PolygonShape;
+
+    final paint = Paint()
+      ..color = const Color.fromARGB(255, 80, 80, 228)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(
+        Rect.fromLTRB(
+          shape.vertices[0].x,
+          shape.vertices[0].y,
+          shape.vertices[2].x,
+          shape.vertices[2].y,
+        ),
+        paint);
   }
 
   @override
